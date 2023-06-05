@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AggregationApp", "AggregationApp\AggregationApp.csproj", "{95A12842-1DE9-49C8-8F83-C97682CA20A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationApp.tests", "AggregationApp.tests\AggregationApp.tests.csproj", "{846BF17F-A2F1-45F4-A200-BBD26F5C388A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{95A12842-1DE9-49C8-8F83-C97682CA20A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95A12842-1DE9-49C8-8F83-C97682CA20A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95A12842-1DE9-49C8-8F83-C97682CA20A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95A12842-1DE9-49C8-8F83-C97682CA20A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{846BF17F-A2F1-45F4-A200-BBD26F5C388A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{846BF17F-A2F1-45F4-A200-BBD26F5C388A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{846BF17F-A2F1-45F4-A200-BBD26F5C388A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{846BF17F-A2F1-45F4-A200-BBD26F5C388A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B4E85890-A125-4F9E-B83C-DC6E63AD8482}
+	EndGlobalSection
+EndGlobal
