@@ -10,13 +10,11 @@ namespace AggregationApp.Controllers
     {
         private readonly ILogger<ElectricityController> _logger;
         private readonly IElectricityDataService _electricityDataService;
-        private readonly ElectricityDbContext _context;
 
         public ElectricityController(ILogger<ElectricityController> logger, IElectricityDataService electricityDataService, ElectricityDbContext context)
         {
             _logger = logger;
             _electricityDataService = electricityDataService;
-            _context = context;
 
         }
 
@@ -39,7 +37,7 @@ namespace AggregationApp.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to retrieve aggregated data.");
-                return StatusCode(500, "An error occurred while retrieving the data.");
+                return StatusCode(500, ex.Message + ex.InnerException);
             }
         }
         [HttpGet("download")]
@@ -62,7 +60,7 @@ namespace AggregationApp.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to retrieve aggregated data.");
-                return StatusCode(500, "An error occured while downloading data");
+                return StatusCode(500, ex.Message + ex.GetBaseException());
             }
         }
     }

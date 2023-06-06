@@ -11,7 +11,6 @@ namespace AggregationApp.Data
         }
         public ElectricityDbContext() : base()
         {
-            
         }
 
         public DbSet<ElectricityDataModel> ElectricityData { get; set; }
@@ -19,7 +18,7 @@ namespace AggregationApp.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ElectricityDataModel>(entity =>
-            {
+            { 
                 entity.Property(e => e.PPlus)
                     .HasColumnType("decimal(18, 2)");
 
@@ -27,6 +26,7 @@ namespace AggregationApp.Data
                     .HasColumnType("decimal(18, 2)");
             });
         }
+        
     }
 }
 

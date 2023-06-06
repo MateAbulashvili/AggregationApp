@@ -10,24 +10,28 @@ namespace AggregationApp.Services
     public class ElectricityDataService : IElectricityDataService
     {
         private readonly ElectricityDbContext _dbContext;
+       
 
         public ElectricityDataService(ElectricityDbContext dbContext)
         {
             _dbContext = dbContext;
-
+           
         }
         public async Task<bool> DownloadCsvFiles()
         {
             try
             {
+
                 HttpClient _httpClient = new HttpClient();
+
                 var uris = new List<string>
-                  {
-                     "https://data.gov.lt/dataset/1975/download/10766/2022-05.csv",
-                     "https://data.gov.lt/dataset/1975/download/10765/2022-04.csv",
-                     "https://data.gov.lt/dataset/1975/download/10764/2022-03.csv",
-                     "https://data.gov.lt/dataset/1975/download/10763/2022-02.csv"                  
-                  };
+                {
+                "https://data.gov.lt/dataset/1975/download/10766/2022-05.csv",
+                "https://data.gov.lt/dataset/1975/download/10765/2022-04.csv",
+                "https://data.gov.lt/dataset/1975/download/10764/2022-03.csv",
+                "https://data.gov.lt/dataset/1975/download/10763/2022-02.csv"
+
+                 };
 
                 foreach (var uri in uris)
                 {
@@ -40,49 +44,60 @@ namespace AggregationApp.Services
                         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                         {
                             csv.Context.RegisterClassMap<CvdDataMap>();
-                            var records = csv.GetRecords<CsvDataModel>();
+                            var records = csv.GetRecords<CsvDataModel>().ToList();
 
-                            var electricityDataList = records.Select(record => new ElectricityDataModel
+                            for (int i = 0; i < 100; i++)
                             {
-                                Network = record.Tinklas,
-                                ObjectName = record.ObjetPavadinimas,
-                                ObjectType = record.ObjectGvTipas,
-                                ObjectNumber = record.ObjectNumeris,
-                                PPlus = record.PPlus,
-                                Timestamp = record.PlT,
-                                PMinus = record.PMinus
-                            }).ToList();
+                                var record = records[i];
+                                var entity = new ElectricityDataModel()
+                                {
+                                    Network = record.Tinklas,
+                                    ObjectName = record.ObjetPavadinimas,
+                                    ObjectType = record.ObjectGvTipas,
+                                    ObjectNumber = record.ObjectNumeris,
+                                    PPlus = record.PPlus,
+                                    Timestamp = record.PlT,
+                                    PMinus = record.PMinus
+                                };
 
-                            await _dbContext.ElectricityData.AddRangeAsync(electricityDataList);
-                            await _dbContext.SaveChangesAsync();
+                                _dbContext.ElectricityData.Add(entity);
+                                _dbContext.SaveChanges();
+                            }
                         }
-
                     }
                 }
 
                 return true;
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex ) 
             {
-                return false;
+                
+                throw new Exception(ex.Message + ex.StackTrace);
             }
         }
-
         public async Task<IEnumerable<APIResponseModel>> GetAggregatedDataAsync()
         {
-            var aggregatedData = await _dbContext.ElectricityData
-                .GroupBy(data => data.Network)
-                .Select(group => new APIResponseModel
-                {
-                    Network = group.Key,
-                    PPlus = group.Sum(data => data.PPlus),
-                    PMinus = group.Sum(data => data.PMinus)
-                })
-                .ToListAsync();
+            try
+            {
+                var aggregatedData = await _dbContext.ElectricityData
+                       .GroupBy(data => data.Network)
+                       .Select(group => new APIResponseModel
+                       {
+                           Network = group.Key,
+                           PPlus = group.Sum(data => data.PPlus),
+                           PMinus = group.Sum(data => data.PMinus)
+                       })
+                       .ToListAsync();
 
-            return aggregatedData;
+                return aggregatedData;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
         }
-
-    }
+    }  
 }
+
 

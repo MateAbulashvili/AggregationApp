@@ -3,7 +3,6 @@ using System;
 using AggregationApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -12,49 +11,45 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AggregationApp.Migrations
 {
     [DbContext(typeof(ElectricityDbContext))]
-    [Migration("20230602121622_mig001")]
-    partial class mig001
+    [Migration("20230605222714_mg011")]
+    partial class mg011
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("AggregationApp.Models.ElectricityData", b =>
+            modelBuilder.Entity("AggregationApp.Models.ElectricityDataModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("Network")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ObjectName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("ObjectNumber")
                         .HasColumnType("int");
 
                     b.Property<string>("ObjectType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
-                    b.Property<decimal>("PMinus")
+                    b.Property<decimal?>("PMinus")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("PPlus")
+                    b.Property<decimal?>("PPlus")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
