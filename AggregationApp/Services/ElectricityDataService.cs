@@ -22,46 +22,48 @@ namespace AggregationApp.Services
             try
             {
 
-                HttpClient _httpClient = new HttpClient();
-
-                var uris = new List<string>
+                using (HttpClient _httpClient = new HttpClient())
                 {
-                "https://data.gov.lt/dataset/1975/download/10766/2022-05.csv",
-                "https://data.gov.lt/dataset/1975/download/10765/2022-04.csv",
-                "https://data.gov.lt/dataset/1975/download/10764/2022-03.csv",
-                "https://data.gov.lt/dataset/1975/download/10763/2022-02.csv"
 
-                 };
+                    var uris = new List<string>
+                   {
+                    "https://data.gov.lt/dataset/1975/download/10766/2022-05.csv",
+                    "https://data.gov.lt/dataset/1975/download/10765/2022-04.csv",
+                    "https://data.gov.lt/dataset/1975/download/10764/2022-03.csv",
+                    "https://data.gov.lt/dataset/1975/download/10763/2022-02.csv"
 
-                foreach (var uri in uris)
-                {
-                    using (var response = await _httpClient.GetAsync(uri))
+                   };
+
+                    foreach (var uri in uris)
                     {
-                        response.EnsureSuccessStatusCode();
-
-                        using (var stream = await response.Content.ReadAsStreamAsync())
-                        using (var reader = new StreamReader(stream))
-                        using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                        using (var response = await _httpClient.GetAsync(uri))
                         {
-                            csv.Context.RegisterClassMap<CvdDataMap>();
-                            var records = csv.GetRecords<CsvDataModel>().ToList();
+                            response.EnsureSuccessStatusCode();
 
-                            for (int i = 0; i < 100; i++)
+                            using (var stream = await response.Content.ReadAsStreamAsync())
+                            using (var reader = new StreamReader(stream))
+                            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                             {
-                                var record = records[i];
-                                var entity = new ElectricityDataModel()
-                                {
-                                    Network = record.Tinklas,
-                                    ObjectName = record.ObjetPavadinimas,
-                                    ObjectType = record.ObjectGvTipas,
-                                    ObjectNumber = record.ObjectNumeris,
-                                    PPlus = record.PPlus,
-                                    Timestamp = record.PlT,
-                                    PMinus = record.PMinus
-                                };
+                                csv.Context.RegisterClassMap<CvdDataMap>();
+                                var records = csv.GetRecords<CsvDataModel>().ToList();
 
-                                _dbContext.ElectricityData.Add(entity);
-                                _dbContext.SaveChanges();
+                                for (int i = 0; i < 100; i++)
+                                {
+                                    var record = records[i];
+                                    var entity = new ElectricityDataModel()
+                                    {
+                                        Network = record.Tinklas,
+                                        ObjectName = record.ObjetPavadinimas,
+                                        ObjectType = record.ObjectGvTipas,
+                                        ObjectNumber = record.ObjectNumeris,
+                                        PPlus = record.PPlus,
+                                        Timestamp = record.PlT,
+                                        PMinus = record.PMinus
+                                    };
+
+                                    _dbContext.ElectricityData.Add(entity);
+                                    _dbContext.SaveChanges();
+                                }
                             }
                         }
                     }
